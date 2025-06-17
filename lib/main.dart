@@ -9,6 +9,7 @@ import 'package:myapp/models/health_metric.dart';
 import 'package:get/get.dart';
 import 'package:myapp/controllers/health_controller.dart';
 import 'dart:math';
+import 'package:myapp/services/gemini_api_service.dart';
 
 void main() {
   runApp(MyApp());
@@ -54,6 +55,8 @@ class HomeScreen extends StatelessWidget {
 
   final HealthController healthController = Get.put(HealthController());
   final RxString dailySuggestion = ''.obs;
+  final GeminiApiService geminiApiService = GeminiApiService();
+  final RxBool isLoading = false.obs;
 
   String getDailyRoutineSuggestion(List<HealthMetric> metrics) {
     if (metrics.isEmpty) {
@@ -168,30 +171,26 @@ class HomeScreen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                dailySuggestion.value = getDailyRoutineSuggestion(healthController.metrics);
-              },
-              child: const Center(
-                child: Text('Get Daily Health Tip'),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () async {
+                  isLoading.value = true;
+                  final tip = await geminiApiService.getHealthTipFromMetrics(healthController.metrics);
+                  dailySuggestion.value = tip ?? 'No tip found.';
+                  isLoading.value = false;
+                },
+                child: Obx(() => isLoading.value
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Center(
+                        child: Text('Get Daily Health Tip (Gemini)'),
+                      )),
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              'Daily Suggestion:',
-              style: textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Obx(() => Text(
-                  dailySuggestion.value,
-                  style: textTheme.bodyLarge,
-                )),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
