@@ -10,6 +10,11 @@ class HealthMetric {
   DateTime? bedtime;
   DateTime? wakeUpTime;
   int? awakenings;
+  int? age;
+  double? height; // in cm
+  String? gender;
+  String? activityLevel;
+  String? diet;
 
   HealthMetric({
     required this.id,
@@ -21,6 +26,11 @@ class HealthMetric {
     this.bedtime,
     this.wakeUpTime,
     this.awakenings,
+    this.age,
+    this.height,
+    this.gender,
+    this.activityLevel,
+    this.diet,
   });
 
   // Optional: for future use with data storage
@@ -35,6 +45,11 @@ class HealthMetric {
       'bedtime': bedtime?.toIso8601String(),
       'wakeUpTime': wakeUpTime?.toIso8601String(),
       'awakenings': awakenings,
+      'age': age,
+      'height': height,
+      'gender': gender,
+      'activityLevel': activityLevel,
+      'diet': diet,
     };
   }
 
@@ -50,6 +65,11 @@ class HealthMetric {
       bedtime: json['bedtime'] != null ? DateTime.parse(json['bedtime']) : null,
       wakeUpTime: json['wakeUpTime'] != null ? DateTime.parse(json['wakeUpTime']) : null,
       awakenings: json['awakenings'],
+      age: json['age'],
+      height: (json['height'] as num?)?.toDouble(),
+      gender: json['gender'],
+      activityLevel: json['activityLevel'],
+      diet: json['diet'],
     );
   }
 }

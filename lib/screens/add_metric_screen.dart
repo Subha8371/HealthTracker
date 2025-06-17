@@ -18,6 +18,11 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
   final TextEditingController _sleepDurationController = TextEditingController();
   final TextEditingController _sleepQualityController = TextEditingController();
   final TextEditingController _awakeningsController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _heightController = TextEditingController();
+  final TextEditingController _genderController = TextEditingController();
+  final TextEditingController _activityLevelController = TextEditingController();
+  final TextEditingController _dietController = TextEditingController();
   final Uuid _uuid = Uuid();
   bool _isLoading = false;
   MetricType? _selectedMetricType;
@@ -26,6 +31,11 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
   DateTime? _bedtime;
   DateTime? _wakeUpTime;
   int? _awakenings;
+  int? _age;
+  double? _height;
+  String? _gender;
+  String? _activityLevel;
+  String? _diet;
 
   final HealthController healthController = Get.find();
 
@@ -35,6 +45,11 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
     _sleepDurationController.dispose();
     _sleepQualityController.dispose();
     _awakeningsController.dispose();
+    _ageController.dispose();
+    _heightController.dispose();
+    _genderController.dispose();
+    _activityLevelController.dispose();
+    _dietController.dispose();
     super.dispose();
   }
 
@@ -230,6 +245,49 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
               ),
               SizedBox(height: 12.0),
             ],
+            // Add new fields for more context
+            TextField(
+              controller: _ageController,
+              decoration: InputDecoration(labelText: 'Age'),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                _age = int.tryParse(value);
+              },
+            ),
+            SizedBox(height: 12.0),
+            TextField(
+              controller: _heightController,
+              decoration: InputDecoration(labelText: 'Height (cm)'),
+              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              onChanged: (value) {
+                _height = double.tryParse(value);
+              },
+            ),
+            SizedBox(height: 12.0),
+            TextField(
+              controller: _genderController,
+              decoration: InputDecoration(labelText: 'Gender'),
+              onChanged: (value) {
+                _gender = value;
+              },
+            ),
+            SizedBox(height: 12.0),
+            TextField(
+              controller: _activityLevelController,
+              decoration: InputDecoration(labelText: 'Activity Level'),
+              onChanged: (value) {
+                _activityLevel = value;
+              },
+            ),
+            SizedBox(height: 12.0),
+            TextField(
+              controller: _dietController,
+              decoration: InputDecoration(labelText: 'Diet'),
+              onChanged: (value) {
+                _diet = value;
+              },
+            ),
+            SizedBox(height: 12.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -299,6 +357,11 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
       bedtime: _bedtime,
       wakeUpTime: _wakeUpTime,
       awakenings: _awakenings,
+      age: _age,
+      height: _height,
+      gender: _gender,
+      activityLevel: _activityLevel,
+      diet: _diet,
     );
 
     await healthController.addMetric(newMetric);
@@ -307,6 +370,11 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
     _sleepDurationController.clear();
     _sleepQualityController.clear();
     _awakeningsController.clear();
+    _ageController.clear();
+    _heightController.clear();
+    _genderController.clear();
+    _activityLevelController.clear();
+    _dietController.clear();
 
     setState(() {
       _selectedMetricType = null;
@@ -317,6 +385,11 @@ class _AddMetricScreenState extends State<AddMetricScreen> {
       _bedtime = null;
       _wakeUpTime = null;
       _awakenings = null;
+      _age = null;
+      _height = null;
+      _gender = null;
+      _activityLevel = null;
+      _diet = null;
       _isLoading = false;
     });
 

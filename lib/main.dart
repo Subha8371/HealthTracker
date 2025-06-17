@@ -176,7 +176,9 @@ class HomeScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () async {
                   isLoading.value = true;
+                  print('Sending metrics: ' + healthController.metrics.toString());
                   final tip = await geminiApiService.getHealthTipFromMetrics(healthController.metrics);
+                  print('Gemini API response: ' + (tip ?? 'null'));
                   dailySuggestion.value = tip ?? 'No tip found.';
                   isLoading.value = false;
                 },
@@ -203,6 +205,15 @@ class HomeScreen extends StatelessWidget {
                 child: Text('Add Health Metric'),
               ),
             ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Obx(() => SingleChildScrollView(
+                  child: Text(
+                    dailySuggestion.value,
+                    style: textTheme.bodyLarge,
+                  ),
+                )),
           ),
         ],
       ),
